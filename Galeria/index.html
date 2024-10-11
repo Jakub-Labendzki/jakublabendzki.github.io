@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Galeria</title>
+    <script type="text/javascript">
+        var zdjecia = [
+            ['pexels-bri-schneiter-28802-346529.jpg', 'thumb_image1.jpg', 'Krajobraz 1', ' '],
+            ['pexels-pixabay-147411.jpg', 'thumb_image2.jpg', 'Krajbraz 2', ' '],
+            ['pexels-pixabay-247599.jpg', 'thumb_image3.jpg', 'Krajobraz 3', ' ']
+        ];
+
+        var max_width = 520;
+        var currentIndex = 0;
+
+        function laduj() {
+            zmien(0);
+        }
+
+        function zmien(id) {
+            currentIndex = id;
+            document.getElementById('zdjecie').innerHTML = '<div id="ladowanie"></div>';
+            var custom = '';
+            var preload = new Image();
+            preload.onload = function() {
+                if (preload.width > max_width) {
+                    custom = ' style="height: ' + (Math.floor(max_width / (preload.width / preload.height))) + 'px; width:' + max_width + 'px;"';
+                }
+                document.getElementById('informacje').innerHTML = '<b>' + (zdjecia[id][2] || 'Brak tytułu') + '</b><br /><i>' + (zdjecia[id][3] || 'Brak opisu') + '</i>';
+                document.getElementById('zdjecie').innerHTML = '<img src="' + zdjecia[id][0] + '"' + custom + ' />';
+            }
+            preload.src = zdjecia[id][0];
+        }
+
+        function nastepne() {
+            if (currentIndex < zdjecia.length - 1) {
+                zmien(currentIndex + 1);
+            } else {
+                zmien(0);
+            }
+        }
+
+        function poprzednie() {
+            if (currentIndex > 0) {
+                zmien(currentIndex - 1);
+            } else {
+                zmien(zdjecia.length - 1);
+            }
+        }
+
+        window.onload = laduj;
+    </script>
+    <style type="text/css">
+        #ladowanie {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('loading.gif') no-repeat center center;
+        }
+
+        #zdjecie, #miniaturki {
+            width: 520px;
+            position: relative;
+            min-height: 300px; /* Ensure there's space for the images */
+            text-align: center; /* Center the image */
+        }
+
+        .przyciski {
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #informacje {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Galeria</h2>
+    <div id="informacje"></div>
+    <div id="zdjecie"></div>
+    
+    <div class="przyciski">
+        <button onclick="poprzednie()">Poprzednie</button>
+        <button onclick="nastepne()">Następne</button>
+    </div>
+</body>
+</html>
